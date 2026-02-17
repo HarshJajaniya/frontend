@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import api, { getCurrentUser } from "@/lib/auth";
 import MeetingsTable from "@/components/MeetingsTable";
+import ScheduleMeetingModal from "@/components/ScheduleMeetingModal";
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [meetings, setMeetings] = useState<any[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     getCurrentUser().then((u) => {
@@ -56,26 +58,15 @@ export default function Dashboard() {
       </div>
 
       <button
-  onClick={async () => {
-    const res = await fetch("http://localhost:8000/meetings", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: "Test Meeting",
-        start: "2026-02-18T10:00:00",
-        end: "2026-02-18T11:00:00",
-      }),
-    });
+        onClick={() => setShowModal(true)}
+        className="bg-indigo-600 text-white px-5 py-2 rounded-lg"
+      >
+        + Schedule Meeting
+      </button>
 
-    const data = await res.json();
-    alert("Meet Link: " + data.meetLink);
-  }}
-  className="bg-indigo-600 text-white px-5 py-2 rounded-lg"
->
-  + Schedule Meeting
-</button>
-
+      {showModal && (
+        <ScheduleMeetingModal onClose={() => setShowModal(false)} />
+      )}
 
       <MeetingsTable meetings={meetings} />
     </div>
