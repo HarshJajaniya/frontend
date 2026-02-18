@@ -1,5 +1,8 @@
 "use client";
 import api from "@/lib/auth";
+// ...existing code...
+import { useState } from "react";
+// ...existing code...
 type Meeting = {
   id?: string;
   title?: string;
@@ -22,6 +25,8 @@ export default function MeetingDetailsModal({
   meeting,
   onClose,
 }: MeetingDetailsModalProps) {
+  // Transcript input state
+  const [transcriptValue, setTranscriptValue] = useState("");
   const formatDateTime = (dateString?: string) => {
     if (!dateString) return "-";
     const date = new Date(dateString);
@@ -41,7 +46,7 @@ export default function MeetingDetailsModal({
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-xl w-[600px] max-h-[80vh] overflow-y-auto shadow-xl"
+        className="bg-white rounded-xl w-150 max-h-[80vh] overflow-y-auto shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -62,24 +67,80 @@ export default function MeetingDetailsModal({
 
         {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Generate MOM Button */}
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={async () => {
-                const transcript = prompt("Paste transcript here");
-                if (!transcript) return;
-                const res = await api.post(
-                  `/meetings/${meeting.id}/generate-mom`,
-                  { transcript }
-                );
-                console.log(res.data);
-                window.location.reload();
-              }}
-              className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700"
-            >
-              Generate MOM
-            </button>
+
+          {/* Audio Upload */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Upload Audio File</label>
+            <label className="flex items-center px-4 py-2 bg-white text-purple-700 rounded-lg shadow border border-purple-200 cursor-pointer hover:bg-purple-50 transition-colors w-full max-w-xs">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg>
+              <span className="truncate">Choose audio file</span>
+              <input
+                type="file"
+                accept="audio/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const formData = new FormData();
+                  formData.append("audio", file);
+                  await fetch(
+                    `http://localhost:8000/meetings/${meeting.id}/upload-audio`,
+                    {
+                      method: "POST",
+                      body: formData,
+                      credentials: "include",
+                    }
+                  );
+                  window.location.reload();
+                }}
+              />
+            </label>
           </div>
+
+          <hr className="my-4 border-gray-200" />
+
+
+          {/* Generate MOM Button */}
+          <div className="mb-6">
+            <label htmlFor="transcript" className="block text-sm font-medium text-gray-700 mb-2">
+              Paste Transcription Here
+            </label>
+            <textarea
+              id="transcript"
+              rows={6}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm bg-gray-50 resize-none mb-2"
+              placeholder="Paste or type the meeting transcript..."
+              value={transcriptValue}
+              onChange={e => setTranscriptValue(e.target.value)}
+            />
+            <div className="flex gap-3 mt-2">
+              <button
+                onClick={async () => {
+                  if (!transcriptValue.trim()) return;
+                  const res = await api.post(
+                    `/meetings/${meeting.id}/generate-mom`,
+                    { transcript: transcriptValue }
+                  );
+                  console.log(res.data);
+                  window.location.reload();
+                }}
+                className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700 transition-colors"
+              >
+                Generate MOM
+              </button>
+              <button
+                type="button"
+                onClick={() => setTranscriptValue("")}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded shadow hover:bg-gray-300 transition-colors"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <hr className="my-4 border-gray-200" />
+
+
 
           {/* Date & Time */}
           <div>
@@ -101,6 +162,9 @@ export default function MeetingDetailsModal({
             </div>
           </div>
 
+          <hr className="my-4 border-gray-200" />
+
+
           {/* Description */}
           {meeting.description && (
             <div>
@@ -114,6 +178,9 @@ export default function MeetingDetailsModal({
               </div>
             </div>
           )}
+
+          <hr className="my-4 border-gray-200" />
+
 
           {/* Meet Link */}
           {meeting.meetLink && (
@@ -133,6 +200,9 @@ export default function MeetingDetailsModal({
               </div>
             </div>
           )}
+
+          <hr className="my-4 border-gray-200" />
+
 
           {/* Participants */}
           <div>
@@ -155,6 +225,9 @@ export default function MeetingDetailsModal({
             </div>
           </div>
 
+          <hr className="my-4 border-gray-200" />
+
+
           {/* Summary */}
           {meeting.summary && (
             <div>
@@ -168,6 +241,8 @@ export default function MeetingDetailsModal({
               </div>
             </div>
           )}
+
+          <hr className="my-4 border-gray-200" />
 
           {/* Transcript */}
           {meeting.transcript && (
