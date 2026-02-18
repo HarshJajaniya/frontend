@@ -1,16 +1,25 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import MeetingDetailsModal from "./MeetingDetailsModal";
 
 type Meeting = {
   id?: string;
   title?: string;
+  description?: string;
   startTime?: string;
   endTime?: string;
+  timezone?: string;
   participants?: string[];
   meetLink?: string;
+  transcript?: string;
+  summary?: string;
   status?: string;
 };
 
 export default function MeetingsTable({ meetings = [] }: { meetings?: Meeting[] }) {
+  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const formatDate = (dateString?: string) => {
     if (!dateString) return "-";
     const date = new Date(dateString);
@@ -48,6 +57,7 @@ export default function MeetingsTable({ meetings = [] }: { meetings?: Meeting[] 
             <th>Participants</th>
             <th>Meet Link</th>
             <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
 
@@ -79,10 +89,25 @@ export default function MeetingsTable({ meetings = [] }: { meetings?: Meeting[] 
                   {m.status ?? "Scheduled"}
                 </span>
               </td>
+              <td>
+                <button
+                  onClick={() => setSelectedMeeting(m)}
+                  className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+                >
+                  View Details
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {selectedMeeting && (
+        <MeetingDetailsModal
+          meeting={selectedMeeting}
+          onClose={() => setSelectedMeeting(null)}
+        />
+      )}
     </div>
   );
 }

@@ -20,14 +20,10 @@ export default function ScheduleMeetingModal({ onClose }: any) {
       return;
     }
 
-    const start = new Date(
-      `${form.date}T${form.startTime}:00`
-    ).toISOString();
-
-    const end = new Date(
-      `${form.date}T${form.endTime}:00`
-    ).toISOString();
-
+    // Send local datetime strings (NOT ISO/UTC) with timezone separately
+    // This lets Google Calendar correctly interpret the time in the specified timezone
+    const start = `${form.date}T${form.startTime}:00`;
+    const end = `${form.date}T${form.endTime}:00`;
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     await api.post("/meetings", {
@@ -50,7 +46,7 @@ export default function ScheduleMeetingModal({ onClose }: any) {
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-xl w-[500px] space-y-4">
+      <div className="bg-white p-8 rounded-xl w-[125] space-y-4">
         <h2 className="text-xl font-semibold">Schedule Meeting</h2>
 
         <input

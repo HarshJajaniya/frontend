@@ -162,9 +162,12 @@ export default function MeetingsPage() {
                             Join
                           </a>
                         )}
-                        <button className="text-gray-600 hover:text-gray-900">
+                        <Link
+                          href={`/meetings/${meeting.id}`}
+                          className="text-gray-600 hover:text-gray-900"
+                        >
                           View
-                        </button>
+                        </Link>
                       </div>
                     </td>
                   </tr>
