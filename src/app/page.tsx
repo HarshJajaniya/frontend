@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import api, { getCurrentUser } from "@/lib/auth";
 import MeetingsTable from "@/components/MeetingsTable";
 import ScheduleMeetingModal from "@/components/ScheduleMeetingModal";
+import CalendarPage from "@/components/calendermodal";
+import Charts from "@/components/Charts";
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
@@ -66,9 +68,12 @@ export default function Dashboard() {
 
       {showModal && (
         <ScheduleMeetingModal onClose={() => setShowModal(false)} />
+        
       )}
-
+      <Charts/>
       <MeetingsTable meetings={meetings} />
+      <CalendarPage />
+      
     </div>
   );
 }

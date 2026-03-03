@@ -101,7 +101,7 @@ export default function MeetingDetailsModal({
 
 
           {/* Generate MOM Button */}
-          <div className="mb-6">
+          <div className="mb-6 flex max-w-5xl mx-auto flex-col">
             <label htmlFor="transcript" className="block text-sm font-medium text-gray-700 mb-2">
               Paste Transcription Here
             </label>

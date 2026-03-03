@@ -87,7 +87,7 @@ export default function MeetingsPage() {
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow border overflow-hidden">
+        <div className="bg-white rounded-lg shadow border overflow-hidden max-w-5xl mx-auto">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 border-b">

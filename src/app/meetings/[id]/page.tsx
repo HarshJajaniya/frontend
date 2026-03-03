@@ -82,6 +82,22 @@ export default async function MeetingDetailPage({
           <div className="max-h-64 overflow-y-auto whitespace-pre-line">{meeting.transcript}</div>
         </div>
       )}
+      {meeting.tasks && meeting.tasks.length > 0 && (
+        <div className="bg-gray-50 rounded-xl p-6">
+          <h2 className="font-semibold mb-4">Tasks</h2>
+          <ul className="space-y-3">
+            {meeting.tasks.map((task: any, i: number) => (
+              <li key={i} className="border p-3 rounded-lg">
+                <p className="font-medium">{task.task}</p>
+                {task.owner && <p className="text-sm text-gray-600">Owner: {task.owner}</p>}
+                {task.deadline && <p className="text-sm text-gray-600">Deadline: {task.deadline}</p>}
+                <p className={`text-sm font-medium ${task.status === "COMPLETED" ? "text-green-600" : "text-yellow-600"}`}>
+                  Status: {task.status}
+                </p>
+              </li>
+            ))}
+          </ul>
+          </div>)}
       <div>
         <a href="/meetings" className="text-indigo-600 underline">← Back to Meetings</a>
       </div>
