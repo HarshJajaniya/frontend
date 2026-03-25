@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "@/lib/auth";
+
+interface Project {
+  id: string;
+  name: string;
+  description?: string;
+}
 
 export default function ScheduleMeetingModal({ onClose }: any) {
   const [form, setForm] = useState({
@@ -11,7 +17,26 @@ export default function ScheduleMeetingModal({ onClose }: any) {
     startTime: "",
     endTime: "",
     participants: "",
+    projectId: "",
   });
+
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await api.get("/projects");
+        setProjects(response.data);
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      } finally {
+        setIsLoadingProjects(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const handleSubmit = async () => {
     // Validate required fields
@@ -32,6 +57,7 @@ export default function ScheduleMeetingModal({ onClose }: any) {
       start,
       end,
       timezone,
+      projectId: form.projectId || null,
       participants: form.participants
         ? form.participants
             .split(",")
@@ -45,8 +71,8 @@ export default function ScheduleMeetingModal({ onClose }: any) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-xl w-125 space-y-4">
+    <div className="z-10 fixed inset-0 bg-black/40 flex items-center justify-center" onClick={onClose}>
+      <div className="bg-white p-8 rounded-xl w-125 space-y-4" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-xl font-semibold">Schedule Meeting</h2>
 
         <input
@@ -84,6 +110,27 @@ export default function ScheduleMeetingModal({ onClose }: any) {
               setForm({ ...form, endTime: e.target.value })
             }
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Project (Optional)
+          </label>
+          <select
+            className="w-full border p-2 rounded"
+            value={form.projectId}
+            onChange={(e) => setForm({ ...form, projectId: e.target.value })}
+            disabled={isLoadingProjects}
+          >
+            <option value="">
+              {isLoadingProjects ? "Loading projects..." : "Select a project"}
+            </option>
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <input

@@ -14,10 +14,13 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    getCurrentUser().then((u) => {
+    const loadUser = async () => {
+      const u = await getCurrentUser();
       setUser(u);
       setLoading(false);
-    });
+    };
+
+    loadUser();
   }, []);
 
   useEffect(() => {

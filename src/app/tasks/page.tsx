@@ -52,6 +52,7 @@ export default function TasksPage() {
     task: "",
     owner: "",
     deadline: "",
+    assignedUserIds: [] as string[],
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -91,7 +92,7 @@ export default function TasksPage() {
       )
     );
 
-    setNewTask({ task: "", owner: "", deadline: "" });
+    setNewTask({ task: "", owner: "", deadline: "", assignedUserIds: [] });
     setAddingTaskFor(null);
   } catch (err) {
     console.error("CREATE TASK ERROR:", err);
@@ -163,6 +164,9 @@ export default function TasksPage() {
                       Owner
                     </th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                      Assigned To
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
                       Deadline
                     </th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
@@ -174,7 +178,7 @@ export default function TasksPage() {
                 <tbody className="divide-y divide-gray-200">
                   {meeting.tasks?.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="px-4 py-4 text-gray-400 text-sm">
+                      <td colSpan={5} className="px-4 py-4 text-gray-400 text-sm">
                         No tasks yet.
                       </td>
                     </tr>
@@ -186,6 +190,11 @@ export default function TasksPage() {
                         </td>
                         <td className="px-4 py-2 text-sm text-gray-600">
                           {task.owner || "-"}
+                        </td>
+                        <td className="px-4 py-2 text-sm text-gray-600">
+                          {task.assignedUsers && task.assignedUsers.length > 0
+                            ? task.assignedUsers.map((u: any) => u.name || u.email).join(", ")
+                            : "-"}
                         </td>
                         <td className="px-4 py-2 text-sm text-gray-600">
                           {task.deadline || "-"}
@@ -207,40 +216,76 @@ export default function TasksPage() {
 
               {/* ADD TASK SECTION */}
               {addingTaskFor === meeting.id ? (
-                <div className="flex gap-2">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    placeholder="Task description"
-                    value={newTask.task}
-                    onChange={(e) =>
-                      setNewTask({ ...newTask, task: e.target.value })
-                    }
-                    className="border rounded px-2 py-1 text-sm w-full"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Owner"
-                    value={newTask.owner}
-                    onChange={(e) =>
-                      setNewTask({ ...newTask, owner: e.target.value })
-                    }
-                    className="border rounded px-2 py-1 text-sm"
-                  />
-                  <input
-                    type="date"
-                    value={newTask.deadline}
-                    onChange={(e) =>
-                      setNewTask({ ...newTask, deadline: e.target.value })
-                    }
-                    className="border rounded px-2 py-1 text-sm"
-                  />
-                  <button
-                    onClick={() => handleAddTask(meeting.id)}
-                    className="bg-indigo-600 text-white px-3 py-1 rounded text-sm"
-                  >
-                    Add
-                  </button>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      placeholder="Task description"
+                      value={newTask.task}
+                      onChange={(e) =>
+                        setNewTask({ ...newTask, task: e.target.value })
+                      }
+                      className="border rounded px-2 py-1 text-sm w-full"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Owner"
+                      value={newTask.owner}
+                      onChange={(e) =>
+                        setNewTask({ ...newTask, owner: e.target.value })
+                      }
+                      className="border rounded px-2 py-1 text-sm"
+                    />
+                    <input
+                      type="date"
+                      value={newTask.deadline}
+                      onChange={(e) =>
+                        setNewTask({ ...newTask, deadline: e.target.value })
+                      }
+                      className="border rounded px-2 py-1 text-sm"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <label className="text-xs text-gray-500 font-medium">
+                        Assign Participants (optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Participant names/emails (comma-separated)"
+                        value={newTask.assignedUserIds.join(", ")}
+                        onChange={(e) =>
+                          setNewTask({
+                            ...newTask,
+                            assignedUserIds: e.target.value
+                              .split(",")
+                              .map((id) => id.trim())
+                              .filter((id) => id),
+                          })
+                        }
+                        className="border rounded px-2 py-1 text-sm w-full"
+                      />
+                    </div>
+                    <div className="flex gap-2 items-end">
+                      <button
+                        onClick={() => handleAddTask(meeting.id)}
+                        className="bg-indigo-600 text-white px-3 py-1 rounded text-sm"
+                      >
+                        Add
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAddingTaskFor(null);
+                          setNewTask({ task: "", owner: "", deadline: "", assignedUserIds: [] });
+                        }}
+                        className="bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-400"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <button

@@ -2,7 +2,8 @@
 
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/lib/auth";
+import api, { getCurrentUser } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 type User = {
   id: string;
@@ -11,8 +12,21 @@ type User = {
 };
 
 export default function Topbar() {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+      setUser(null);
+      setIsOpen(false);
+      router.refresh();
+      window.location.assign("/");
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+    }
+  };
   useEffect(() => {
     getCurrentUser().then((userData) => {
       if (userData) {
@@ -45,12 +59,26 @@ export default function Topbar() {
 
       <div className="flex items-center gap-6">
         <Bell className="text-gray-600 cursor-pointer" />
-        <div 
-          className="bg-indigo-600 text-white w-10 h-10 flex items-center justify-center rounded-full cursor-pointer"
-          title={user?.email}
-        >
-          {user ? getInitials(user.name, user.email) : "?"}
-        </div>
+        <div className="relative">
+  <div
+    onClick={() => setIsOpen(!isOpen)}
+    className="bg-indigo-600 text-white w-10 h-10 flex items-center justify-center rounded-full cursor-pointer"
+    title={user?.email}
+  >
+    {user ? getInitials(user.name, user.email) : "?"}
+  </div>
+
+  {isOpen && (
+    <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg py-2 z-50">
+      <button
+        onClick={handleLogout}
+        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+      >
+        Logout
+      </button>
+    </div>
+  )}
+</div>
       </div>
     </div>
   );

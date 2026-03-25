@@ -55,8 +55,8 @@ export default function Sidebar() {
           <SidebarItem icon={<LayoutDashboard size={18} />} label="Dashboard" active={pathname === "/" || pathname === "/dashboard"} href="/"/>
           <SidebarItem icon={<Calendar size={18} />} label="Meetings" active={pathname === "/meetings"} href="/meetings" />
           <SidebarItem icon={<CheckSquare size={18} />} label="Tasks" active={pathname === "/tasks"} href="/tasks"/>
-          <SidebarItem icon={<Folder size={18} />} label="Projects" />
-          <SidebarItem icon={<Settings size={18} />} label="Settings" />
+          <SidebarItem icon={<Folder size={18} />} label="Projects" active={pathname === "/projects"} href="/projects" />
+          <SidebarItem icon={<Settings size={18} />} label="Settings" active={pathname === "/settings"} href="/settings" />
         </nav>
       </div>
 
