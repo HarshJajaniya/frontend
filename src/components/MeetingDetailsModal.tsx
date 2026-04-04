@@ -84,7 +84,7 @@ export default function MeetingDetailsModal({
                   const formData = new FormData();
                   formData.append("audio", file);
                   await fetch(
-                    `http://localhost:8000/meetings/${meeting.id}/upload-audio`,
+                    `${process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"}/meetings/${meeting.id}/upload-audio`,
                     {
                       method: "POST",
                       body: formData,

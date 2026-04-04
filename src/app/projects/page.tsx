@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import ProjectCard from "@/components/ProjectCard";
 import CreateProject from "@/components/CreateProject";
 
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +14,7 @@ export default function ProjectsPage() {
   const fetchProjects = () => {
     setLoading(true);
     setError("");
-    fetch("http://localhost:8000/projects", {
+    fetch(`${API_URL}/projects`, {
       credentials: "include",
     })
       .then((res) => {

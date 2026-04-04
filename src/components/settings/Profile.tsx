@@ -136,7 +136,7 @@ export default function ProfilePage() {
     return (
       <div className="flex items-center justify-center h-screen">
         <a
-          href="http://localhost:8000/auth/google"
+          href={`${process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"}/auth/google`}
           className="bg-indigo-600 text-white px-6 py-3 rounded-lg"
         >
           Sign in with Google

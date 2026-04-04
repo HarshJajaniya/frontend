@@ -36,9 +36,10 @@ export default function CreateProject({ onCreated }: CreateProjectProps) {
 			setLoadingOptions(true);
 			setError("");
 			try {
+				const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
 				const [meetingsRes, tasksRes] = await Promise.all([
-					fetch("http://localhost:8000/meetings", { credentials: "include" }),
-					fetch("http://localhost:8000/tasks/all", { credentials: "include" }),
+					fetch(`${SERVER}/meetings`, { credentials: "include" }),
+					fetch(`${SERVER}/tasks/all`, { credentials: "include" })
 				]);
 
 				if (!meetingsRes.ok || !tasksRes.ok) {
@@ -93,7 +94,8 @@ export default function CreateProject({ onCreated }: CreateProjectProps) {
 		setError("");
 
 		try {
-			const res = await fetch("http://localhost:8000/projects", {
+			const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+			const res = await fetch(`${SERVER}/projects`, {
 				method: "POST",
 				credentials: "include",
 				headers: {

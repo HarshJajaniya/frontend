@@ -7,7 +7,7 @@ async function getMeeting(id: string) {
   const cookieHeader = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ');
 
   const res = await fetch(
-    `http://localhost:8000/meetings/${id}`,
+    `${process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"}/meetings/${id}`,
     {
       headers: {
         Cookie: cookieHeader,

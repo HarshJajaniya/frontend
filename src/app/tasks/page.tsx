@@ -4,8 +4,10 @@ import { User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+
 async function getTasks() {
-  const res = await fetch("http://localhost:8000/meetings", {
+  const res = await fetch(`${API_URL}/meetings`, {
     credentials: "include",
     cache: "no-store",
   });
@@ -16,7 +18,7 @@ async function getTasks() {
 }
 
 async function updateTaskStatus(taskId: string, status: string) {
-  await fetch(`http://localhost:8000/tasks/${taskId}`, {
+  await fetch(`${API_URL}/tasks/${taskId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status }),
@@ -25,7 +27,7 @@ async function updateTaskStatus(taskId: string, status: string) {
 }
 
 async function createTask(data: any) {
-  const res = await fetch(`http://localhost:8000/tasks`, {
+  const res = await fetch(`${API_URL}/tasks`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

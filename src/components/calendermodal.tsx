@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
+
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -10,7 +12,7 @@ export default function CalendarPage() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/meetings", {
+    fetch(`${API_URL}/meetings`, {
       credentials: "include",
     })
       .then((res) => res.json())

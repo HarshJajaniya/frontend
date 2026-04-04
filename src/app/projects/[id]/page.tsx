@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+
 export default function ProjectPage() {
   const params = useParams();
   const projectId = typeof params?.id === "string" ? params.id : "";
@@ -24,7 +26,7 @@ export default function ProjectPage() {
     setLoading(true);
     setError("");
 
-    fetch(`http://localhost:8000/projects/${projectId}`, {
+    fetch(`${API_URL}/projects/${projectId}`, {
       credentials: "include",
     })
       .then(async (res) => {
@@ -56,8 +58,8 @@ export default function ProjectPage() {
     fetchProject();
 
     Promise.all([
-      fetch("http://localhost:8000/meetings", { credentials: "include" }),
-      fetch("http://localhost:8000/tasks/all", { credentials: "include" }),
+      fetch(`${API_URL}/meetings`, { credentials: "include" }),
+      fetch(`${API_URL}/tasks/all`, { credentials: "include" }),
     ])
       .then(async ([meetingsRes, tasksRes]) => {
         if (!meetingsRes.ok || !tasksRes.ok) {
@@ -94,7 +96,7 @@ export default function ProjectPage() {
 
     setSavingLinks(true);
     try {
-      const res = await fetch(`http://localhost:8000/projects/${projectId}/link`, {
+      const res = await fetch(`${API_URL}/projects/${projectId}/link`, {
         method: "PATCH",
         credentials: "include",
         headers: {
