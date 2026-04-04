@@ -1,43 +1,41 @@
-import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
+"use client";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://meetmom-backend.onrender.com"
-    : "http://localhost:8000");
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import api from "@/lib/auth";
 
-async function getMeeting(id: string) {
-  const cookieStore = await cookies();
-  // Manually join cookies for header
-  const cookieHeader = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ');
+export default function MeetingDetailPage() {
+  const params = useParams();
+  const id = typeof params?.id === "string" ? params.id : "";
+  const [meeting, setMeeting] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const res = await fetch(
-    `${API_URL}/meetings/${id}`,
-    {
-      headers: {
-        Cookie: cookieHeader,
-      },
-      cache: "no-store",
+  useEffect(() => {
+    if (!id) {
+      setError("Invalid meeting id");
+      setLoading(false);
+      return;
     }
-  );
 
-  if (!res.ok) return null;
+    api
+      .get(`/meetings/${id}`)
+      .then((res) => {
+        setMeeting(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Meeting not found or unauthorized");
+        setLoading(false);
+      });
+  }, [id]);
 
-  return res.json();
-}
+  if (loading) {
+    return <div className="p-8">Loading meeting...</div>;
+  }
 
-export default async function MeetingDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-
-  const meeting = await getMeeting(id);
-
-  if (!meeting) {
-    notFound();
+  if (error || !meeting) {
+    return <div className="p-8 text-red-500">{error || "Failed to load meeting"}</div>;
   }
 
   const participants = Array.isArray(meeting.participants) ? meeting.participants : [];
