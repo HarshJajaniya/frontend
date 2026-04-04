@@ -69,7 +69,7 @@ export default function MeetingsPage() {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Your Meetings</h2>
         <Link
-          href="/dashboard"
+          href="/"
           className="text-indigo-600 hover:text-indigo-700 text-sm font-medium"
         >
           ← Back to Dashboard
@@ -80,7 +80,7 @@ export default function MeetingsPage() {
         <div className="bg-white p-8 rounded-lg shadow border text-center">
           <p className="text-gray-500 mb-4">No meetings scheduled yet.</p>
           <Link
-            href="/dashboard"
+            href="/"
             className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
           >
             Create Your First Meeting

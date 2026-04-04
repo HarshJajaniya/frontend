@@ -52,7 +52,7 @@ export default function Sidebar() {
         </h1>
 
         <nav className="space-y-3">
-          <SidebarItem icon={<LayoutDashboard size={18} />} label="Dashboard" active={pathname === "/" || pathname === "/dashboard"} href="/"/>
+          <SidebarItem icon={<LayoutDashboard size={18} />} label="Dashboard" active={pathname === "/"} href="/"/>
           <SidebarItem icon={<Calendar size={18} />} label="Meetings" active={pathname === "/meetings"} href="/meetings" />
           <SidebarItem icon={<CheckSquare size={18} />} label="Tasks" active={pathname === "/tasks"} href="/tasks"/>
           <SidebarItem icon={<Folder size={18} />} label="Projects" active={pathname === "/projects"} href="/projects" />
