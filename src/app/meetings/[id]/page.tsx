@@ -1,13 +1,19 @@
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://meetmom-backend.onrender.com"
+    : "http://localhost:8000");
+
 async function getMeeting(id: string) {
   const cookieStore = await cookies();
   // Manually join cookies for header
   const cookieHeader = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ');
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"}/meetings/${id}`,
+    `${API_URL}/meetings/${id}`,
     {
       headers: {
         Cookie: cookieHeader,
@@ -34,6 +40,10 @@ export default async function MeetingDetailPage({
     notFound();
   }
 
+  const participants = Array.isArray(meeting.participants) ? meeting.participants : [];
+  const actionItems = Array.isArray(meeting.actionItems) ? meeting.actionItems : [];
+  const tasks = Array.isArray(meeting.tasks) ? meeting.tasks : [];
+
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-6">
       <h1 className="text-3xl font-bold mb-6">Meeting Details</h1>
@@ -47,8 +57,8 @@ export default async function MeetingDetailPage({
         <div><span className="font-semibold">Status:</span> {meeting.transcript ? "Completed" : meeting.startTime ? "Scheduled" : "Draft"}</div>
         <div><span className="font-semibold">Created At:</span> {meeting.createdAt ? new Date(meeting.createdAt).toLocaleString() : "-"}</div>
         <div><span className="font-semibold">User ID:</span> {meeting.userId}</div>
-        {meeting.participants && meeting.participants.length > 0 && (
-          <div><span className="font-semibold">Participants:</span> {meeting.participants.join(", ")}</div>
+        {participants.length > 0 && (
+          <div><span className="font-semibold">Participants:</span> {participants.join(", ")}</div>
         )}
         {meeting.meetLink && (
           <div>
@@ -62,11 +72,11 @@ export default async function MeetingDetailPage({
           <p className="whitespace-pre-line">{meeting.summary}</p>
         </div>
       )}
-      {meeting.actionItems && meeting.actionItems.length > 0 && (
+      {actionItems.length > 0 && (
         <div className="bg-gray-50 rounded-xl p-6">
           <h2 className="font-semibold mb-4">Action Items</h2>
           <ul className="space-y-3">
-            {meeting.actionItems.map((item: any, i: number) => (
+            {actionItems.map((item: any, i: number) => (
               <li key={i} className="border p-3 rounded-lg">
                 <p className="font-medium">{item.task}</p>
                 {item.owner && <p className="text-sm text-gray-600">Owner: {item.owner}</p>}
@@ -82,11 +92,11 @@ export default async function MeetingDetailPage({
           <div className="max-h-64 overflow-y-auto whitespace-pre-line">{meeting.transcript}</div>
         </div>
       )}
-      {meeting.tasks && meeting.tasks.length > 0 && (
+      {tasks.length > 0 && (
         <div className="bg-gray-50 rounded-xl p-6">
           <h2 className="font-semibold mb-4">Tasks</h2>
           <ul className="space-y-3">
-            {meeting.tasks.map((task: any, i: number) => (
+            {tasks.map((task: any, i: number) => (
               <li key={i} className="border p-3 rounded-lg">
                 <p className="font-medium">{task.task}</p>
                 {task.owner && <p className="text-sm text-gray-600">Owner: {task.owner}</p>}
@@ -97,7 +107,8 @@ export default async function MeetingDetailPage({
               </li>
             ))}
           </ul>
-          </div>)}
+        </div>
+      )}
       <div>
         <a href="/meetings" className="text-indigo-600 underline">← Back to Meetings</a>
       </div>

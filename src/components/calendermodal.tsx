@@ -3,13 +3,17 @@
 import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 
-const API_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+const API_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://meetmom-backend.onrender.com"
+    : "http://localhost:8000");
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
 export default function CalendarPage() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<any[]>([]);
 
   useEffect(() => {
     fetch(`${API_URL}/meetings`, {
@@ -17,7 +21,8 @@ export default function CalendarPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        const formatted = data.map((meeting: any) => ({
+        const safeMeetings = Array.isArray(data) ? data : [];
+        const formatted = safeMeetings.map((meeting: any) => ({
           id: meeting.id,
           title: meeting.title,
           start: meeting.startTime,
@@ -26,6 +31,9 @@ export default function CalendarPage() {
         }));
 
         setEvents(formatted);
+      })
+      .catch(() => {
+        setEvents([]);
       });
   }, []);
 
