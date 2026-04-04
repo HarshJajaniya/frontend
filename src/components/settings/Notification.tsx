@@ -1,7 +1,8 @@
 "use client"
-import { Profiler, useEffect, useState } from "react"   
+import { Profiler, use, useEffect, useState } from "react"   
 import { useRouter } from "next/navigation"
 
+const SERVER=process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"
 
 export default function Notifications() {
   const router = useRouter()
@@ -32,6 +33,34 @@ export default function Notifications() {
 function ToggleEvents() {
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [pushNotifications, setPushNotifications] = useState(false)
+
+  useEffect(() => {
+   fetch(`${SERVER}/api/user/notifications`, {
+      method: "GET",
+      credentials: "include",
+    }).then(res => res.json()).then(data => {
+      setEmailNotifications(data.emailNotifications)
+      setPushNotifications(data.pushNotifications)
+    })
+  }, [])
+
+  useEffect(() => {
+    const updateNotifications = async () => {
+      await fetch(`${SERVER}/api/user/notifications`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          emailNotifications,
+          pushNotifications,
+        }),
+      })
+    }
+
+    updateNotifications()
+  }, [emailNotifications, pushNotifications])
 
   return (
     <div className="mt-6 space-y-4">

@@ -9,7 +9,6 @@ import Notifications from "@/components/settings/Notification"
 const tabs=[
     { label: "Profile", value: "profile",icon: User },
     { label: "Notifications", value: "notifications",icon: Bell },
-    { label: "Integrations", value: "integrations",icon: Link },
   ]
 export default function SettingsPage() {
   const router = useRouter()
@@ -23,8 +22,6 @@ export default function SettingsPage() {
         return <Profile />
       case "notifications":
         return <Notifications />
-      // case "integrations":
-      //   return <Integrations />
       default:
         return <Profile />
     }
