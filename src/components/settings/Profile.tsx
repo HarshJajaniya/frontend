@@ -17,7 +17,11 @@ import { toast } from "react-hot-toast"
 import { getCurrentUser } from "@/lib/auth"
 import * as z from "zod"
 
-const SERVER=process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"
+const SERVER =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://meetmom-backend.onrender.com"
+    : "http://localhost:8000")
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -136,7 +140,7 @@ export default function ProfilePage() {
     return (
       <div className="flex items-center justify-center h-screen">
         <a
-          href={`${process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"}/auth/google`}
+          href={`${SERVER}/auth/google`}
           className="bg-indigo-600 text-white px-6 py-3 rounded-lg"
         >
           Sign in with Google

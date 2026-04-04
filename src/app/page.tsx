@@ -7,6 +7,12 @@ import ScheduleMeetingModal from "@/components/ScheduleMeetingModal";
 import CalendarPage from "@/components/calendermodal";
 import Charts from "@/components/Charts";
 
+const SERVER_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://meetmom-backend.onrender.com"
+    : "http://localhost:8000");
+
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -42,7 +48,7 @@ export default function Dashboard() {
     return (
       <div className="flex items-center justify-center h-screen">
         <a
-          href={`${process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"}/auth/google`}
+          href={`${SERVER_URL}/auth/google`}
           className="bg-indigo-600 text-white px-6 py-3 rounded-lg"
         >
           Sign in with Google
