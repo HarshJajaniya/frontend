@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import ProjectCard from "@/components/ProjectCard";
 import CreateProject from "@/components/CreateProject";
 
-const API_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+const API_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://meetmom-backend.onrender.com"
+    : "http://localhost:8000");
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<any[]>([]);

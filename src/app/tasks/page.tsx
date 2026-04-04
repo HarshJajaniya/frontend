@@ -4,7 +4,11 @@ import { User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+const API_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://meetmom-backend.onrender.com"
+    : "http://localhost:8000");
 
 async function getTasks() {
   const res = await fetch(`${API_URL}/meetings`, {

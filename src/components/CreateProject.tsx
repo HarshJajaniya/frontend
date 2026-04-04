@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+const API_URL =
+	process.env.NEXT_PUBLIC_SERVER_URL ||
+	(process.env.NODE_ENV === "production"
+		? "https://meetmom-backend.onrender.com"
+		: "http://localhost:8000");
+
 type Meeting = {
 	id: string;
 	title: string;
@@ -36,10 +42,9 @@ export default function CreateProject({ onCreated }: CreateProjectProps) {
 			setLoadingOptions(true);
 			setError("");
 			try {
-				const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
 				const [meetingsRes, tasksRes] = await Promise.all([
-					fetch(`${SERVER}/meetings`, { credentials: "include" }),
-					fetch(`${SERVER}/tasks/all`, { credentials: "include" })
+					fetch(`${API_URL}/meetings`, { credentials: "include" }),
+					fetch(`${API_URL}/tasks/all`, { credentials: "include" })
 				]);
 
 				if (!meetingsRes.ok || !tasksRes.ok) {
@@ -94,8 +99,7 @@ export default function CreateProject({ onCreated }: CreateProjectProps) {
 		setError("");
 
 		try {
-			const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
-			const res = await fetch(`${SERVER}/projects`, {
+			const res = await fetch(`${API_URL}/projects`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
