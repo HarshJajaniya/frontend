@@ -1,11 +1,14 @@
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
+  title: "Meetmom",
+  description: "AI Meeting Automation",
   verification: {
-    google: "OJFJJ4Pm7jJUKEl0VaAr46Z-DII9JiBfFReI9CHGgrE"
-  }
+    google: "OJFJJ4Pm7jJUKEl0VaAr46Z-DII9JiBfFReI9CHGgrE",
+  },
 };
 
 export default function RootLayout({
