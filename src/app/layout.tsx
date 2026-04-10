@@ -2,6 +2,12 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
 
+export const metadata = {
+  verification: {
+    google: "OJFJJ4Pm7jJUKEl0VaAr46Z-DII9JiBfFReI9CHGgrE"
+  }
+};
+{/* <meta name="google-site-verification" content="OJFJJ4Pm7jJUKEl0VaAr46Z-DII9JiBfFReI9CHGgrE" /> */}
 export default function RootLayout({
   children,
 }: {
