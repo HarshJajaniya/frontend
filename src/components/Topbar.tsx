@@ -4,6 +4,7 @@ import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import api, { getCurrentUser } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type User = {
   id: string;
@@ -50,14 +51,26 @@ export default function Topbar() {
   };
 
   return (
-    <div className="bg-white border-b px-8 py-4 flex justify-between items-center">
+    <div className="bg-white border-b px-4 md:px-8 py-4 flex justify-between items-center gap-3">
       <input
         type="text"
         placeholder="Search meetings, tasks, projects..."
-        className="w-1/2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="hidden md:block w-1/2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-3 md:gap-6">
+        <Link
+          href="/privacy"
+          className="text-sm font-medium text-gray-700 border border-gray-300 px-3 py-1.5 rounded-md hover:bg-gray-100"
+        >
+          Privacy
+        </Link>
+        <Link
+          href="/terms"
+          className="text-sm font-medium text-gray-700 border border-gray-300 px-3 py-1.5 rounded-md hover:bg-gray-100"
+        >
+          Terms
+        </Link>
         <Bell className="text-gray-600 cursor-pointer" />
         <div className="relative">
   <div
