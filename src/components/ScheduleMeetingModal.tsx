@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import api from "@/lib/auth";
+import toast from "react-hot-toast";
 
 interface Project {
   id: string;
@@ -41,33 +42,49 @@ export default function ScheduleMeetingModal({ onClose }: any) {
   const handleSubmit = async () => {
     // Validate required fields
     if (!form.title || !form.date || !form.startTime || !form.endTime) {
-      alert("Please fill in all required fields");
+      toast.error("Please fill in all required fields");
       return;
     }
 
-    // Send local datetime strings (NOT ISO/UTC) with timezone separately
-    // This lets Google Calendar correctly interpret the time in the specified timezone
-    const start = `${form.date}T${form.startTime}:00`;
-    const end = `${form.date}T${form.endTime}:00`;
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // Validate that end time is after start time
+    if (form.endTime <= form.startTime) {
+      toast.error("End time must be after start time");
+      return;
+    }
 
-    await api.post("/meetings", {
-      title: form.title,
-      description: form.description,
-      start,
-      end,
-      timezone,
-      projectId: form.projectId || null,
-      participants: form.participants
-        ? form.participants
-            .split(",")
-            .map((p) => p.trim())
-            .filter((email) => email.includes("@"))
-        : [],
-    });
+    try {
+      // Send local datetime strings (NOT ISO/UTC) with timezone separately
+      // This lets Google Calendar correctly interpret the time in the specified timezone
+      const start = `${form.date}T${form.startTime}:00`;
+      const end = `${form.date}T${form.endTime}:00`;
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    onClose();
-    window.location.reload();
+      await api.post("/meetings", {
+        title: form.title,
+        description: form.description,
+        start,
+        end,
+        timezone,
+        projectId: form.projectId || null,
+        participants: form.participants
+          ? form.participants
+              .split(",")
+              .map((p) => p.trim())
+              .filter((email) => email.includes("@"))
+          : [],
+      });
+
+      toast.success("Meeting created successfully!");
+      onClose();
+      window.location.reload();
+    } catch (error: any) {
+      console.error("Failed to create meeting:", error);
+      const errorMessage = 
+        error?.response?.data?.message || 
+        error?.message || 
+        "Failed to create meeting";
+      toast.error(errorMessage);
+    }
   };
 
   return (
