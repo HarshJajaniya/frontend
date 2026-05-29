@@ -6,7 +6,7 @@ export default function PrivacyPage() {
         We collect basic user information (name, email) for authentication purposes only.
       </p>
       <p className="text-gray-700 leading-7 mt-3">
-        We do not share data with third parties.
+        We do not share data with third parties.We are legit.
       </p>
     </section>
   );
