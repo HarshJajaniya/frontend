@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"}/auth/logout`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL!}/auth/logout`, {
       method: "POST",
       credentials: "include",
       headers: {

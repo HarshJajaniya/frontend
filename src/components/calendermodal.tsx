@@ -3,11 +3,7 @@
 import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://meetmom-backend.onrender.com"
-    : "http://localhost:8000");
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL!;
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";

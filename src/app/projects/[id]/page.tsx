@@ -3,11 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://meetmom-backend.onrender.com"
-    : "http://localhost:8000");
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL!;
 
 export default function ProjectPage() {
   const params = useParams();

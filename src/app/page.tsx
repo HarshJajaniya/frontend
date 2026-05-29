@@ -7,11 +7,7 @@ import ScheduleMeetingModal from "@/components/ScheduleMeetingModal";
 import CalendarPage from "@/components/calendermodal";
 import Charts from "@/components/Charts";
 
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://meetmom-backend.onrender.com"
-    : "http://localhost:8000");
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL!;
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);

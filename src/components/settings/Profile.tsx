@@ -17,11 +17,7 @@ import { toast } from "react-hot-toast"
 import { getCurrentUser } from "@/lib/auth"
 import * as z from "zod"
 
-const SERVER =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://meetmom-backend.onrender.com"
-    : "http://localhost:8000")
+const SERVER = process.env.NEXT_PUBLIC_SERVER_URL!
 
 export default function ProfilePage() {
   const router = useRouter()

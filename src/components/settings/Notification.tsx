@@ -2,7 +2,7 @@
 import { Profiler, use, useEffect, useState } from "react"   
 import { useRouter } from "next/navigation"
 
-const SERVER=process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000"
+const SERVER = process.env.NEXT_PUBLIC_SERVER_URL!
 
 export default function Notifications() {
   const router = useRouter()
