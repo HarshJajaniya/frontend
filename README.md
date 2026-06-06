@@ -176,6 +176,111 @@ Health route:
 - Database connection errors:
   - Verify DATABASE_URL and database availability.
 
+## DevOps & Deployment
+
+* Dockerized frontend and backend services for consistent development and production environments
+* Docker Compose orchestration for multi-container deployment
+* GitHub Actions CI/CD pipeline for automated build, test, and deployment workflows
+* Docker Hub integration for automatic image publishing and version management
+* AWS EC2 deployment for hosting containerized services
+* Linux server administration and SSH-based infrastructure management
+* Automated container updates through CI/CD workflows
+* Environment-based configuration management for development and production deployments
+
+## Deployment Architecture
+
+```text
+                        ┌─────────────────────┐
+                        │      Developer      │
+                        └──────────┬──────────┘
+                                   │
+                              Git Push
+                                   │
+                                   ▼
+                        ┌─────────────────────┐
+                        │       GitHub        │
+                        └──────────┬──────────┘
+                                   │
+                           GitHub Actions
+                               (CI/CD)
+                                   │
+                  ┌────────────────┴────────────────┐
+                  │                                 │
+                  ▼                                 ▼
+      ┌─────────────────────┐          ┌─────────────────────┐
+      │  Backend Docker     │          │  Frontend Docker    │
+      │    Image Build      │          │    Image Build      │
+      └──────────┬──────────┘          └──────────┬──────────┘
+                 │                                │
+                 └──────────────┬─────────────────┘
+                                │
+                                ▼
+                    ┌─────────────────────┐
+                    │     Docker Hub      │
+                    │ Container Registry  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │      AWS EC2        │
+                    │ Docker Compose      │
+                    │ Container Runtime   │
+                    └──────────┬──────────┘
+                               │
+             ┌─────────────────┼─────────────────┐
+             │                                   │
+             ▼                                   ▼
+ ┌─────────────────────┐              ┌─────────────────────┐
+ │ MeetMOM Frontend    │              │ MeetMOM Backend     │
+ │ Next.js + React     │◄────────────►│ Node.js + Express   │
+ └─────────────────────┘              └──────────┬──────────┘
+                                                  │
+                                                  ▼
+                                     ┌─────────────────────┐
+                                     │ Neon PostgreSQL     │
+                                     │     Database        │
+                                     └─────────────────────┘
+```
+
+### Current Production Setup
+
+```text
+Frontend (Vercel)
+        │
+        ▼
+MeetMOM Frontend (Next.js)
+        │
+        ▼
+Backend API (Render)
+        │
+        ▼
+Neon PostgreSQL
+```
+
+### DevOps Stack
+
+* GitHub Actions for CI/CD automation
+* Docker & Docker Compose for containerization
+* Docker Hub for image registry and versioning
+* AWS EC2 for container deployment and infrastructure
+* Render for backend hosting
+* Vercel for frontend hosting
+* Neon PostgreSQL for managed database hosting
+* Linux & SSH for server administration
+
+```
+```
+
+
+### Infrastructure
+
+* Frontend: Vercel
+* Backend: Render
+* Database: Neon PostgreSQL
+* Container Registry: Docker Hub
+* CI/CD: GitHub Actions
+* Cloud Infrastructure: AWS EC2
+
 ## Security Notes
 
 - Do not commit real secrets to Git.
